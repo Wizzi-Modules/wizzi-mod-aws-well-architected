@@ -17,8 +17,8 @@ mod "aws_well_architected" {
     plugin "aws" {
       min_version = "0.101.0"
     }
-    mod "/opt/wizzi-mod-aws-compliance" {
-      path = "/opt/wizzi-mod-aws-compliance"
+    mod "/modules/aws_compliance" {
+      path = "/modules/aws_compliance"
       args = {
         common_dimensions = var.common_dimensions,
         tag_dimensions    = var.tag_dimensions
