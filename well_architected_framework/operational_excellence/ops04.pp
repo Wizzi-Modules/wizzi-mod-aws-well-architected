@@ -45,7 +45,7 @@ benchmark "well_architected_framework_ops04_bp02" {
     # aws_compliance.control.cloudtrail_trail_integrated_with_logs,
     aws_compliance.control.cloudwatch_alarm_action_enabled,
     aws_compliance.control.rds_db_instance_logging_enabled,
-    aws_compliance.control.ec2_instance_detailed_monitoring_enabled,
+    # aws_compliance.control.ec2_instance_detailed_monitoring_enabled,
     # aws_compliance.control.vpc_flow_logs_enabled
   ]
 
