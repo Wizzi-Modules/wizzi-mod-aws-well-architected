@@ -35,9 +35,9 @@ benchmark "well_architected_framework_sec01_bp02" {
   description = "The root user is the most privileged user in an AWS account, with full administrative access to all resources within the account, and in some cases cannot be constrained by security policies. Disabling programmatic access to the root user, establishing appropriate controls for the root user, and avoiding routine use of the root user helps reduce the risk of inadvertent exposure of the root credentials and subsequent compromise of the cloud environment."
   children = [
     // TODO: Should we add a control that uses the query iam_root_last_used?
-    aws_compliance.control.iam_root_user_hardware_mfa_enabled,
-    aws_compliance.control.iam_root_user_mfa_enabled,
-    aws_compliance.control.iam_root_user_no_access_keys
+    control.iam_root_user_hardware_mfa_enabled,
+    control.iam_root_user_mfa_enabled,
+    control.iam_root_user_no_access_keys
   ]
 
   tags = merge(local.well_architected_framework_sec01_common_tags, {
