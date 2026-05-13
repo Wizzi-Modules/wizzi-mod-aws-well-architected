@@ -69,6 +69,55 @@ query "iam_root_user_hardware_mfa_enabled" {
   EOQ
 }
 
+control "iam_user_with_administrator_access_mfa_enabled" {
+  title       = "IAM administrator users should have MFA enabled"
+  description = "Manage access to resources in the AWS Cloud by ensuring MFA is enabled for IAM users with AdministratorAccess attached."
+  query       = query.iam_user_with_administrator_access_mfa_enabled
+  severity    = "critical"
+
+  tags = merge(local.well_architected_iam_common_tags, {
+    category = "well_architected"
+  })
+}
+
+query "iam_user_with_administrator_access_mfa_enabled" {
+  sql = <<-EOQ
+    with admin_users as (
+      select
+        user_id,
+        name,
+        attachments
+      from
+        aws_iam_user,
+        jsonb_array_elements_text(attached_policy_arns) as attachments
+      where
+        split_part(attachments, '/', 2) = 'AdministratorAccess'
+    )
+    select
+      u.arn as resource,
+      case
+        when au.user_id is null then 'skip'
+        when au.user_id is not null and u.mfa_enabled then 'ok'
+        else 'alarm'
+      end as status,
+      case
+        when au.user_id is null then
+          'IAM user ' || u.name || ' in account ' || u.account_id || ' (global) does not have administrator access.'
+        when au.user_id is not null and u.mfa_enabled then
+          'IAM administrator user ' || u.name || ' in account ' || u.account_id || ' (global) has MFA enabled.'
+        else
+          'IAM administrator user ' || u.name || ' in account ' || u.account_id || ' (global) does not have MFA enabled.'
+      end as reason
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "u.")}
+      ${replace(local.common_dimensions_qualifier_global_sql, "__QUALIFIER__", "u.")}
+    from
+      aws_iam_user as u
+      left join admin_users au on u.user_id = au.user_id
+    order by
+      u.name;
+  EOQ
+}
+
 control "iam_root_user_no_access_keys" {
   title       = "IAM root user should not have access keys"
   description = "Access to systems and assets can be controlled by checking that the root user does not have access keys attached to their IAM role."

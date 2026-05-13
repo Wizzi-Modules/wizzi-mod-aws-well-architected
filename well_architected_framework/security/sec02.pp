@@ -27,7 +27,7 @@ benchmark "well_architected_framework_sec02_bp01" {
     aws_compliance.control.iam_user_mfa_enabled,
     aws_compliance.control.iam_user_console_access_mfa_enabled,
     # aws_compliance.control.iam_root_user_no_access_keys,
-    aws_compliance.control.iam_user_with_administrator_access_mfa_enabled,
+    control.iam_user_with_administrator_access_mfa_enabled,
     aws_compliance.control.sagemaker_notebook_instance_root_access_disabled
   ]
 
